@@ -3,10 +3,13 @@ import { useQuery } from 'react-query';
 import { Book, Response, LIBRARY_KEY } from '../interfaces/interfaces';
 
 export const Library = () => {
+  // Redux States.
   const [availableBooks, setAvailableBooks] = React.useState<Book[]>(JSON.parse(localStorage.getItem('avBooks') || '[]') ?? []);
   const [myBooks, setMyBooks] = React.useState<Book[]>(JSON.parse(localStorage.getItem('myBooks') || '[]') ?? []);
   const [genres, setGenres] = React.useState<string[]>(['Todos']);
   const [selectedGenre, setSelectedGenre] = React.useState('Todos');
+
+  // React Query to get available books from API.
   const {
     isLoading,
     data: library,
@@ -22,6 +25,7 @@ export const Library = () => {
     })
   )
 
+  // Hooks to update redux states. 
   useEffect(() => {
     library?.default.library.map(book => {
       const genre = book.book.genre;
@@ -48,6 +52,7 @@ export const Library = () => {
     localStorage.setItem('myBooks', JSON.stringify(myBooks));
   }, [myBooks])
 
+  // Handlers to add and remove books from reading list.
   const onAddEvent = (book: Book) => {
     const updatedAB = availableBooks.filter(b => b.book.ISBN !== book.book.ISBN);
     setAvailableBooks(updatedAB);
@@ -60,6 +65,7 @@ export const Library = () => {
     setAvailableBooks([...availableBooks, book]);
   }
 
+  // Function to display books in a array.
   const mapBookArray = (array: Book[], genre: string, divClasses: string, buttonTColor: string, buttonText: string, handler: any) => {
     return (
       <div className={`${divClasses}`}>
@@ -128,7 +134,7 @@ export const Library = () => {
             );
           })}
         </select>
-        {
+        { 
           mapBookArray(
             availableBooks,
             selectedGenre,
@@ -140,7 +146,7 @@ export const Library = () => {
         }
       </div>
       <div className="booksContainer bg-gray-300">
-        <h2 className='my-10'>Mi Lista de libros</h2>
+        <h2 className='my-10'>Mi Lista de Lectura</h2>
         {myBooks.length == 0 ? <div>No tiene libros agregados</div> : mapBookArray(
           myBooks,
           'Todos',
@@ -153,4 +159,5 @@ export const Library = () => {
     </div>
   );
 };
+
 export default Library;
