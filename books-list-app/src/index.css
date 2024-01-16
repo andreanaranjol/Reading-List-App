@@ -78,5 +78,5 @@ button:focus-visible {
 }
 
 .booksContainer {
-  padding-bottom: 15px;
+  padding: 0 20px 15px;
 }

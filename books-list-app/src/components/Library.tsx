@@ -5,7 +5,7 @@ import { Book, Response, LIBRARY_KEY } from '../interfaces/interfaces';
 export const Library = () => {
   const [availableBooks, setAvailableBooks] = React.useState<Book[]>(JSON.parse(localStorage.getItem('avBooks') || '[]') ?? []);
   const [myBooks, setMyBooks] = React.useState<Book[]>(JSON.parse(localStorage.getItem('myBooks') || '[]') ?? []);
-  const [genres, setGenres] = React.useState<string[]>(JSON.parse(localStorage.getItem('genres') || '[]') ?? ['Todos']);
+  const [genres, setGenres] = React.useState<string[]>(['Todos']);
   const [selectedGenre, setSelectedGenre] = React.useState('Todos');
   const {
     isLoading,
@@ -23,15 +23,6 @@ export const Library = () => {
   )
 
   useEffect(() => {
-    
-    console.log(availableBooks);
-  }, )
-
-
-  useEffect(() => {
-    if (availableBooks?.length == 0) {
-      setAvailableBooks(library?.default.library ?? []);
-    }
     library?.default.library.map(book => {
       const genre = book.book.genre;
       const found = genres.find(el => {
@@ -41,6 +32,12 @@ export const Library = () => {
         setGenres([...genres, genre])
       }
     })
+  })
+
+  useEffect(() => {
+    if (availableBooks?.length == 0) {
+      setAvailableBooks(library?.default.library ?? []);
+    }
   }, [library?.default.library]);
 
   useEffect(() => {
@@ -50,10 +47,6 @@ export const Library = () => {
   useEffect(() => {
     localStorage.setItem('myBooks', JSON.stringify(myBooks));
   }, [myBooks])
-
-  useEffect(() => {
-    localStorage.setItem('genres', JSON.stringify(genres));
-  }, [genres])
 
   const onAddEvent = (book: Book) => {
     const updatedAB = availableBooks.filter(b => b.book.ISBN !== book.book.ISBN);
